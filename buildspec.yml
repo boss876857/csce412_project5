@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo "Deploying files to S3..."
+      - aws s3 sync . s3://${BUCKET_NAME} --delete
+  post_build:
+    commands:
+      - echo "Invalidating CloudFront cache so changes appear immediately..."
+      - aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
