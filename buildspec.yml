@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - aws s3 sync . s3://${BUCKET_NAME} --delete --exclude "buildspec.yml"
+      - aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
+
+artifacts:
+  files:
+    - '**/*'
